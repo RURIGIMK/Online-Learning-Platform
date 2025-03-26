@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+<h1>Dashboard</h1>
+<div id="nav"></div>
+<p><a href="/courses">View Courses</a></p>
+<button onclick="logout()">Logout</button>
+
+<script>
+    // Retrieve token and role from localStorage
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (!token || !role) {
+      window.location.href = "/login";
+    }
+
+    // Build navigation based on role
+    let navHtml = '<ul>';
+    if (role.toUpperCase() === "INSTRUCTOR") {
+      navHtml += '<li><a href="/create-course">Create Course</a></li>';
+    }
+    if (role.toUpperCase() === "APPROVER") {
+      navHtml += '<li><a href="/approve-courses">Approve Courses</a></li>';
+    }
+    if (role.toUpperCase() === "STUDENT") {
+      navHtml += '<li><a href="/courses">Enroll in Courses</a></li>';
+    }
+    // All roles see this link
+    navHtml += '</ul>';
+    document.getElementById("nav").innerHTML = navHtml;
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      window.location.href = "/login";
+    }
+</script>
+</body>
+</html>

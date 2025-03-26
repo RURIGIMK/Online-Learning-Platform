@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Approve Courses</title>
+</head>
+<body>
+<h1>Pending Courses for Approval</h1>
+<button id="loadPending">Load Pending Courses</button>
+<div id="pendingList"></div>
+<p><a href="/dashboard">Back to Dashboard</a></p>
+
+<script>
+    document.getElementById("loadPending").addEventListener("click", async function() {
+      const token = localStorage.getItem("token");
+      const response = await fetch('/api/courses/pending', {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+      if (response.ok) {
+        const courses = await response.json();
+        let html = "<ul>";
+        courses.forEach(course => {
+          html += `<li>${course.title} - ${course.description} (Status: ${course.status})</li>`;
+        });
+        html += "</ul>";
+        document.getElementById("pendingList").innerHTML = html;
+      } else {
+        document.getElementById("pendingList").textContent = "Failed to load pending courses.";
+      }
+    });
+</script>
+</body>
+</html>

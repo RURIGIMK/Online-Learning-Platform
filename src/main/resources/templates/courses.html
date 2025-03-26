@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Courses</title>
+</head>
+<body>
+<h1>Approved Courses</h1>
+<button id="loadCourses">Load Courses</button>
+<div id="courseList"></div>
+<p><a href="/dashboard">Back to Dashboard</a></p>
+
+<script>
+  document.getElementById("loadCourses").addEventListener("click", async function() {
+    const response = await fetch('/api/courses/approved');
+    if (response.ok) {
+      const courses = await response.json();
+      let html = "<ul>";
+      courses.forEach(course => {
+        html += `<li>${course.title} - ${course.description} (Status: ${course.status})</li>`;
+      });
+      html += "</ul>";
+      document.getElementById("courseList").innerHTML = html;
+    } else {
+      document.getElementById("courseList").textContent = "Failed to load courses.";
+    }
+  });
+</script>
+</body>
+</html>
